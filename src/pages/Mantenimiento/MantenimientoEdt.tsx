@@ -14,16 +14,6 @@ import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 
 const MantenimientoEdt: React.FC = () => {
 
-  type mantenimientoItem = {
-    id: string;
-    fecha: string;
-    mantenimiento: string;
-    kilometraje: string;
-    tipo: string;
-    funcionario: string;
-  };
-
-  const [manItem, setManItem]= useState<Array<mantenimientoItem>>([]);
   const history = useHistory();
   const [selectedOption, setSelectedOption] = useState('');
   const [mantenimientos, setItem]= useState<{ fecha: string, mantenimiento: string, kilometraje: string, tipo: string, funcionario: string  }>({ fecha: '', 
@@ -94,7 +84,6 @@ const MantenimientoEdt: React.FC = () => {
       setIsOpen(true);
     } else {
       try {
-        // Add test record to db
         performSQLAction(
           async (db: SQLiteDBConnection | undefined) => {
             await db?.query(`INSERT INTO mantenimientos (fecha, mantenimiento, kilometraje, tipo, funcionario) values (?, ?, ?, ?, ?);`, [
@@ -105,7 +94,6 @@ const MantenimientoEdt: React.FC = () => {
               mantenimientos.funcionario
             ]);
   
-            // Obtén el ID generado
             const result = await db?.query('SELECT last_insert_rowid() as id;');
             
             if (result && result.values && result.values.length > 0) {
@@ -117,7 +105,6 @@ const MantenimientoEdt: React.FC = () => {
                   generatedId
                 ]);
               }
-              // Puedes ahora utilizar el ID generado como desees
             } else {
               console.error('No se pudo obtener el ID generado');
             }
@@ -139,19 +126,20 @@ const MantenimientoEdt: React.FC = () => {
       setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: '' });
     } else {
       try {
-        // query db
         performSQLAction(async (db: SQLiteDBConnection | undefined) => {
-          const respSelect = await db?.query(`SELECT * FROM mantenimientos`);
+          const respSelect = await db?.query(`SELECT * FROM mantenimientos WHERE id = ?`, [id]);
           if (respSelect && respSelect.values && respSelect.values.length > 0) {
-            console.log("encontre el id")
-            setManItem(respSelect?.values);
-            console.log(" este es: " + manItem[0].mantenimiento);
-            setItem({ fecha: manItem[id].fecha, mantenimiento: manItem[id].mantenimiento, kilometraje: manItem[id].kilometraje, tipo: manItem[id].tipo, funcionario: manItem[id].funcionario });
+            console.log("Encontré el registro con el ID:", id);
+            setItem(respSelect.values[0]);
+            console.log("Este es: " + respSelect.values[0].mantenimiento);
+          } else {
+            console.log("No se encontró ningún registro con el ID:", id);
+            setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: ''});
           }
         });
       } catch (error) {
         alert((error as Error).message);
-        setManItem([]);
+        setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: ''});
       }
     }
   }
