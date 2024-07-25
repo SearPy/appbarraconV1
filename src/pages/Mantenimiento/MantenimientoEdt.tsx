@@ -35,7 +35,6 @@ const MantenimientoEdt: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("el id es: " + id)
     search();
   }, [history.location.pathname]);
 
@@ -138,6 +137,7 @@ const MantenimientoEdt: React.FC = () => {
           }
         });
       } catch (error) {
+        console.log("ocurrio un error")
         alert((error as Error).message);
         setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: ''});
       }
