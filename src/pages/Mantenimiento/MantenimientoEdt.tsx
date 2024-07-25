@@ -34,9 +34,7 @@ const MantenimientoEdt: React.FC = () => {
     setCurrentDate(localDate.toISOString().slice(0, -1));
   }, []);
 
-  useEffect(() => {
-    search();
-  }, [history.location.pathname]);
+  
 
   const seleccion = (e: any) => {
     setSelectedOption(e.detail.value);
@@ -121,7 +119,7 @@ const MantenimientoEdt: React.FC = () => {
 
 
   const search = async () => {
-    if (id === 'new') {
+    if (!id || id === 'new') {
       setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: '' });
     } else {
       try {
@@ -143,6 +141,12 @@ const MantenimientoEdt: React.FC = () => {
       }
     }
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      search();
+    }, 0);
+  }, [id]);
 
 
   return (
@@ -269,7 +273,7 @@ const MantenimientoEdt: React.FC = () => {
               <IonButton onClick={saveMantenimiento} color="success" fill="solid" slot="end" size="default" >
                 <IonIcon icon={checkmark} />
               </IonButton>
-            </IonItem>
+          </IonItem>
         </IonCard>
       </IonContent>
     </IonPage>
