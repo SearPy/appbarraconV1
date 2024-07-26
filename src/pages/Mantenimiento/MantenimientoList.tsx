@@ -87,9 +87,9 @@ const MantenimientoList: React.FC = () => {
                               onClick={() => verMantenimiento(String(man.id))}>
                         <IonIcon icon={eye} slot="icon-only"/>
                     </IonButton>
-                    <IonButton color="danger" fill="clear">
+                    {/* <IonButton color="danger" fill="clear">
                       <IonIcon icon={trash} slot="icon-only" />
-                    </IonButton>
+                    </IonButton> */}
                   </IonCol>
                 </IonRow>
               )}

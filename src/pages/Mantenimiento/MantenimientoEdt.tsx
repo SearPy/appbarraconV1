@@ -1,7 +1,7 @@
 import { IonAlert, IonButton, IonButtons, IonCard, IonCol, IonContent, IonDatetime, IonDatetimeButton, IonGrid,
           IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonModal, IonPage, 
           IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
-import { checkmark, arrowDown } from 'ionicons/icons';
+import { checkmark, arrowDown, closeCircle, close } from 'ionicons/icons';
 import { useRouteMatch } from 'react-router-dom'
 import { useHistory } from 'react-router';
 import '../Paginas.css';
@@ -128,7 +128,12 @@ const MantenimientoEdt: React.FC = () => {
           if (respSelect && respSelect.values && respSelect.values.length > 0) {
             console.log("Encontré el registro con el ID:", id);
             setItem(respSelect.values[0]);
-            console.log("Este es: " + respSelect.values[0].mantenimiento);
+            setSelectedOption(respSelect.values[0].tipo);
+            setCurrentDate(respSelect.values[0].fecha);
+            const respPiezas = await db?.query(`SELECT * FROM piezas WHERE mantenimiento_id = ?`, [id]);
+            if (respPiezas && respPiezas.values) {
+              setPieza(respPiezas.values);
+            }
           } else {
             console.log("No se encontró ningún registro con el ID:", id);
             setItem({ fecha: '', mantenimiento: '', kilometraje: '', tipo: '', funcionario: ''});
@@ -176,7 +181,8 @@ const MantenimientoEdt: React.FC = () => {
                 <IonInput autocapitalize="characters"
                           name="mantenimiento"
                           value={mantenimientos.mantenimiento}
-                          onIonInput={inputMantenimiento}></IonInput>
+                          onIonInput={inputMantenimiento}
+                          readonly={id !== "new"}></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -188,7 +194,8 @@ const MantenimientoEdt: React.FC = () => {
                 <IonInput autocapitalize="characters" type='number'
                           name="kilometraje"
                           value={mantenimientos.kilometraje}
-                          onIonInput={inputMantenimiento}></IonInput>
+                          onIonInput={inputMantenimiento}
+                          readonly={id !== "new"}></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -197,7 +204,9 @@ const MantenimientoEdt: React.FC = () => {
             <IonItem>
               <IonLabel position="stacked">Tipo de Mantenimiento</IonLabel>
               <IonSelect aria-label="Tipo" interface="action-sheet" placeholder="Tipo de Mantenimiento"
-                          onIonChange={seleccion}>
+                          onIonChange={seleccion}
+                          value={selectedOption}
+                          disabled={id !== "new"}>
                 <IonSelectOption value="Cambio de Aceite">Cambio de Aceite</IonSelectOption>
                 <IonSelectOption value="Cambio de Piezas">Cambio de Piezas</IonSelectOption>
                 <IonSelectOption value="Soldadura">Soldadura</IonSelectOption>
@@ -218,11 +227,12 @@ const MantenimientoEdt: React.FC = () => {
                           placeholder='1.234.567'
                           name="funcionario"
                           value={mantenimientos.funcionario}
-                          onIonInput={inputMantenimiento}></IonInput>
+                          onIonInput={inputMantenimiento}
+                          readonly={id !== "new"}></IonInput>
               </IonItem>
             </IonCol>
           </IonRow>
-
+          {id === "new" && (
           <IonRow>
             <IonCol>
               <IonItem>
@@ -230,7 +240,8 @@ const MantenimientoEdt: React.FC = () => {
                 <IonInput autocapitalize="characters"
                           name="pieza"
                           value={piezanew.pieza}
-                          onIonInput={inputPiezas}></IonInput>
+                          onIonInput={inputPiezas}
+                          readonly={id !== "new"}></IonInput>
               </IonItem>
             </IonCol>
             <IonCol>
@@ -239,15 +250,19 @@ const MantenimientoEdt: React.FC = () => {
                 <IonInput autocapitalize="characters" type='number'
                           name="cantidad"
                           value={piezanew.cantidad}
-                          onIonInput={inputPiezas}></IonInput>
+                          onIonInput={inputPiezas}
+                          readonly={id !== "new"}></IonInput>
               </IonItem>
             </IonCol>
             <IonCol>
-              <IonButton onClick={addpieza} color="primary" fill="solid" size="default">
+              
+                <IonButton onClick={addpieza} color="primary" fill="solid" size="default">
                 <IonIcon icon={arrowDown} />
-              </IonButton>
+                </IonButton>
+              
             </IonCol>
           </IonRow>
+          )}
 
           <IonAlert
             isOpen={isOpen}
@@ -270,9 +285,15 @@ const MantenimientoEdt: React.FC = () => {
             ))}
           </IonGrid>
           <IonItem>
-              <IonButton onClick={saveMantenimiento} color="success" fill="solid" slot="end" size="default" >
+            {id === "new" ? (
+              <IonButton onClick={saveMantenimiento} color="success" fill="solid" slot="end" size="default">
                 <IonIcon icon={checkmark} />
               </IonButton>
+            ) : (
+              <IonButton  onClick={retorno} color="danger" fill="outline" slot="end" size="default">
+                <IonIcon icon={close} />
+              </IonButton>
+            )}
           </IonItem>
         </IonCard>
       </IonContent>
