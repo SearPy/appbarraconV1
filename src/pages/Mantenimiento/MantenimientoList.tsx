@@ -1,6 +1,6 @@
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { IonButton, IonButtons, IonCard, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
-import { add, eye, trash } from 'ionicons/icons';
+import { add, eye, eyeOutline, trash } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import useSQLiteDB from '../../SqlConfig/useSQLiteDB';
@@ -85,7 +85,7 @@ const MantenimientoList: React.FC = () => {
                   <IonCol>
                     <IonButton color="primary" fill="clear"
                               onClick={() => verMantenimiento(String(man.id))}>
-                        <IonIcon icon={eye} slot="icon-only"/>
+                        <IonIcon icon={eyeOutline} slot="icon-only"/>
                     </IonButton>
                     {/* <IonButton color="danger" fill="clear">
                       <IonIcon icon={trash} slot="icon-only" />

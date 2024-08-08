@@ -1,7 +1,7 @@
 import { IonAlert, IonButton, IonButtons, IonCard, IonCol, IonContent, IonDatetime, IonDatetimeButton, IonGrid,
           IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonModal, IonPage, 
           IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
-import { checkmark, arrowDown, closeCircle, close } from 'ionicons/icons';
+import { closeOutline, checkmarkOutline, arrowDownOutline } from 'ionicons/icons';
 import { useRouteMatch } from 'react-router-dom'
 import { useHistory } from 'react-router';
 import '../Paginas.css';
@@ -257,7 +257,7 @@ const MantenimientoEdt: React.FC = () => {
             <IonCol>
               
                 <IonButton onClick={addpieza} color="primary" fill="solid" size="default">
-                <IonIcon icon={arrowDown} />
+                <IonIcon icon={arrowDownOutline} />
                 </IonButton>
               
             </IonCol>
@@ -287,11 +287,11 @@ const MantenimientoEdt: React.FC = () => {
           <IonItem>
             {id === "new" ? (
               <IonButton onClick={saveMantenimiento} color="success" fill="solid" slot="end" size="default">
-                <IonIcon icon={checkmark} />
+                <IonIcon icon={checkmarkOutline} />
               </IonButton>
             ) : (
               <IonButton  onClick={retorno} color="danger" fill="outline" slot="end" size="default">
-                <IonIcon icon={close} />
+                <IonIcon icon={closeOutline} />
               </IonButton>
             )}
           </IonItem>
